@@ -31,9 +31,17 @@ pip install -r requirements.txt
 deactivate
 
 # 3. Install systemd service
+
+# Stop and disable any existing service
+if systemctl is-active --quiet p5ink.service; then
+  echo "Stopping and disabling old p5ink.service..."
+  sudo systemctl stop p5ink.service
+  sudo systemctl disable p5ink.service
+fi
+
 SERVICE_FILE="/etc/systemd/system/p5ink.service"
 
-sudo bash -c "cat > \$SERVICE_FILE" << EOF
+cat << EOF | sudo tee "$SERVICE_FILE" > /dev/null
 [Unit]
 Description=P5InkyDiffusion Service
 After=network.target
